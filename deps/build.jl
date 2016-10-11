@@ -1,3 +1,35 @@
+using BinDeps
+using Compat
+
+@BinDeps.setup
+
+libglfw = library_dependency("libglfw", aliases=["libglfw3"])
+
+# package managers
+provides(AptGet, Dict("libglfw3-dev"=>libglfw, "libglfw3" =>libglfw, "libglfw-dev"=>libglfw, "libglfw"=>libglfw))
+provides(Yum,  Dict("libglfw3-devel"=>libglfw, "libglfw3" =>libglfw, "libglfw-devel"=>libglfw, "libglfw"=>libglfw))
+provides(Pacman, "glfw3", libglfw)
+
+if is_apple()
+    if Pkg.installed("Homebrew") === nothing
+        error("Homebrew package not installed, please run Pkg.add(\"Homebrew\")")
+    end
+    using Homebrew
+    provides(Homebrew.HB, "homebrew/versions/glfw3", libglfw, os = :Darwin)
+end
+
+if is_windows()
+     using WinRPM
+     provides(WinRPM.RPM, "glfw3", libglfw, os = :Windows)
+end
+
+# build from source
+provides(Sources, URI("https://github.com/glfw/glfw/archive/3.2.1.tar.gz"), libglfw)
+provides(BuildProcess, Autotools(libtarget = "libglfw3.la"), libglfw)
+
+@BinDeps.install Dict(:libglfw => :libglfw)
+
+#=
 # version of library to download
 const version = v"3.2.1"
 const glfw = "glfw-$version"
@@ -78,3 +110,4 @@ if is_windows()
 		cp(dllpath, "usr$sz/lib", remove_destination=true)
 	end
 end
+=#

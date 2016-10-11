@@ -8,7 +8,7 @@ window = GLFW.CreateWindow(800, 600, "InexactError")
 # some platforms (Linux), clicking on the window's close icon can send
 # other values (like 189). Make sure such values don't cause trouble for
 # GLFW.WindowShouldClose.
-ccall( (:glfwSetWindowShouldClose, GLFW.lib), Void, (GLFW.WindowHandle, Cint), window, 189)
+ccall( (:glfwSetWindowShouldClose, GLFW.libglfw), Void, (GLFW.WindowHandle, Cint), window, 189)
 @test GLFW.WindowShouldClose(window)
 
 

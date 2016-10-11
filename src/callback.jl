@@ -36,12 +36,12 @@ macro callback(ex)
 		function $setter($(window_arg...), callback::Function)
 			$callback_ref = callback # Prevent Julia function from being garbage-collected
 			cfunptr = cfunction($wrapper, Void, $wrapper_types)
-			ccall( ($libsetter, lib), Void, ($(handle_type...), Ptr{Void}), $(window_value...), cfunptr)
+			ccall( ($libsetter, libglfw), Void, ($(handle_type...), Ptr{Void}), $(window_value...), cfunptr)
 		end
 
 		# Unset the callback function
 		function $setter($(window_arg...), ::Void)
-			ccall( ($libsetter, lib), Void, ($(handle_type...), Ptr{Void}), $(window_value...), C_NULL)
+			ccall( ($libsetter, libglfw), Void, ($(handle_type...), Ptr{Void}), $(window_value...), C_NULL)
 			$callback_ref = undef # Allow former callback function to be garbage-collected
 			return nothing
 		end
